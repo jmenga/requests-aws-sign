@@ -1,5 +1,6 @@
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
+from urlparse import urlparse
 import requests
 
 class AWSV4Sign(requests.auth.AuthBase):
@@ -15,7 +16,14 @@ class AWSV4Sign(requests.auth.AuthBase):
         self.service = service
 
     def __call__(self, r):
-        request = AWSRequest(method=r.method.upper(), url=r.url, data=r.body)
+        url = urlparse(r.url)
+        path = url.path or '/'
+        if url.query:
+            querystring = '?' + url.query
+        else:
+            querystring = ''
+        safe_url = url.scheme + '://' + url.netloc.split(':')[0] + path + querystring
+        request = AWSRequest(method=r.method.upper(), url=safe_url, data=r.body)
         SigV4Auth(self.credentials, self.service, self.region).add_auth(request)
         r.headers.update(dict(request.headers.items()))
         return r
