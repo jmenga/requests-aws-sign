@@ -27,8 +27,8 @@ This package provides the ``AWSV4Sign`` class, which extends requests ``AuthBase
     service = 'es'
 
     url = "https://es-search-domain.ap-southeast-2.es.amazonaws.com/"
-
-    requests.get(url, auth=AWSV4Sign(credentials, region, service))
+    auth=AWSV4Sign(credentials, region, service)
+    response = requests.get(url, auth=auth)
 
 When signing requests using this package, the following headers are added to the HTTP Request:
 
@@ -62,6 +62,33 @@ Support for STS Assume Role and EC2 IAM Instance Profiles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You should use Boto3 to provide your credentials object as demonstrated in the example usage, as it will cache credentials and in the case of assume role profiles and EC2 Instance IAM profiles, automatically refresh credentials as required.
+
+Elasticsearch Usage Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    import requests
+    from requests_aws_sign import AWSV4Sign
+    from boto3 import session
+    from elasticsearch import Elasticsearch, RequestsHttpConnection
+
+    # Establish credentials
+    session = session.Session()
+    credentials = session.get_credentials()
+    region = session.region_name or 'ap-southeast-2'
+
+    # Elasticsearch settings
+    service = 'es'
+    es_host = "https://es-search-domain.ap-southeast-2.es.amazonaws.com/"
+    auth=AWSV4Sign(credentials, region, service)
+    es_client = Elasticsearch(host=es_host,
+                              port=443,
+                              connection_class=RequestsHttpConnection,
+                              http_auth=auth,
+                              use_ssl=True,
+                              verify_ssl=True)
+    print es_client.info()
 
 Installation
 ------------
