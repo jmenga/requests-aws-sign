@@ -6,7 +6,7 @@ This package allows for AWS V4 request signing using the requests library.
 Usage
 -----
 
-``AWSV4Sign`` extends requests ``AuthBase``, so usage is simple:
+This package provides the ``AWSV4Sign`` class, which extends requests ``AuthBase``:
 
 .. code:: python
 
@@ -26,7 +26,9 @@ Usage
     # You must provide the AWS service.  E.g. 'es' for Elasticsearch, 's3' for S3, etc.
     service = 'es'
 
-    requests.get("https://es-search-domain.ap-southeast-2.es.amazonaws.com/",auth=AWSV4Sign(credentials, region, service))
+    url = "https://es-search-domain.ap-southeast-2.es.amazonaws.com/"
+
+    requests.get(url, auth=AWSV4Sign(credentials, region, service))
 
 When signing requests using this package, the following headers are added to the HTTP Request:
 
@@ -36,12 +38,30 @@ When signing requests using this package, the following headers are added to the
 
 See `AWS documentation`_ for further information on the signing process.
 
-.. _docs: http://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
+.. _AWS documentation: http://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
+
+AWS Services
+^^^^^^^^^^^^
+
+To obtain a list of services to pass in the signing request, you can call the Boto3 session :code:`get_available_services()` function:
+
+.. code:: python
+  
+  >>> import boto3
+  >>> boto3.session.Session().get_available_services()
+  ['acm', 'apigateway', 'application-autoscaling', 'autoscaling', 'cloudformation', 'cloudfront', 'cloudhsm', 
+   'cloudsearch', 'cloudsearchdomain', 'cloudtrail', 'cloudwatch', 'codecommit', 'codedeploy', 'codepipeline', 
+   'cognito-identity', 'cognito-idp', 'cognito-sync', 'config', 'datapipeline', 'devicefarm', 'directconnect', 
+   'discovery', 'dms', 'ds', 'dynamodb', 'dynamodbstreams', 'ec2', 'ecr', 'ecs', 'efs', 'elasticache', 
+   'elasticbeanstalk', 'elastictranscoder', 'elb', 'emr', 'es', 'events', 'firehose', 'gamelift', 'glacier', 'iam', 
+   'importexport', 'inspector', 'iot', 'iot-data', 'kinesis', 'kms', 'lambda', 'logs', 'machinelearning', 
+   'marketplacecommerceanalytics', 'meteringmarketplace', 'opsworks', 'rds', 'redshift', 'route53', 'route53domains', 
+   's3', 'sdb', 'ses', 'sns', 'sqs', 'ssm', 'storagegateway', 'sts', 'support', 'swf', 'waf', 'workspaces']
 
 Support for STS Assume Role and EC2 IAM Instance Profiles
----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You should use Boto3 to provide your credentials object as demonstrated in the example usage, as it will cache credentials and in the case of assume role profiles and EC2 Instance IAM profile, automatically refresh credentials as required.
+You should use Boto3 to provide your credentials object as demonstrated in the example usage, as it will cache credentials and in the case of assume role profiles and EC2 Instance IAM profiles, automatically refresh credentials as required.
 
 Installation
 ------------
