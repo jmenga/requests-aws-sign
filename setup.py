@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='requests_aws_sign',
-    version='0.1.2.dev0',
+    version='0.1.2',
     packages=[ 'requests_aws_sign' ],
     install_requires=[ 'requests>=2.0.0', 'boto3' ],
     provides=[ 'requests_aws_sign' ],
@@ -25,6 +25,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'License :: OSI Approved :: ISC License (ISCL)',
     ],
 )
