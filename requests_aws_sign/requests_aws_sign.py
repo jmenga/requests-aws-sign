@@ -1,6 +1,10 @@
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
+
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
-from urlparse import urlparse
 import requests
 
 class AWSV4Sign(requests.auth.AuthBase):
