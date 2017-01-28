@@ -58,6 +58,8 @@ To obtain a list of services to pass in the signing request, you can call the Bo
    'marketplacecommerceanalytics', 'meteringmarketplace', 'opsworks', 'rds', 'redshift', 'route53', 'route53domains', 
    's3', 'sdb', 'ses', 'sns', 'sqs', 'ssm', 'storagegateway', 'sts', 'support', 'swf', 'waf', 'workspaces']
 
+Note that there is an unlisted service 'execute-api' used for Signing API Gateway requests - see below. 
+
 Support for STS Assume Role and EC2 IAM Instance Profiles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -89,6 +91,33 @@ Elasticsearch Usage Example
                               use_ssl=True,
                               verify_ssl=True)
     print es_client.info()
+
+
+Signing API Gateway requests
+----------------------------
+
+API Gateway is an AWS service that lets you create and publish your own REST APIs. API Gateway gives you the option of [Authorizing access to your own API endpoints using IAM](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html). You can use this library to sign requests to API Gateway.
+
+.. code:: python
+
+    import requests
+    from requests_aws_sign import AWSV4Sign
+    from boto3 import session
+    from elasticsearch import Elasticsearch, RequestsHttpConnection
+
+    # Establish credentials
+    session = session.Session()
+    credentials = session.get_credentials()
+    region = session.region_name or 'ap-southeast-2'
+
+    # API Gateway execute settings
+    uri = "https://<my-api-gw-endpoint>.execute-api.ap-southeast-2.amazonaws.com/Prod" + "/test"
+    headers={"Content-Type":"application/json"}
+    payload = "{}" 
+    service = 'execute-api'
+    auth=AWSV4Sign(credentials, region, service)
+    response = requests.post(uri, auth=auth, headers=headers,json=payload)
+
 
 Installation
 ------------
