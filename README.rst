@@ -96,7 +96,7 @@ Elasticsearch Usage Example
 Signing API Gateway requests
 ----------------------------
 
-API Gateway is an AWS service that lets you create and publish your own REST APIs. API Gateway gives you the option of [Authorizing access to your own API endpoints using IAM](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html). You can use this library to sign requests to API Gateway.
+API Gateway is an AWS service that lets you create and publish your own REST APIs. API Gateway gives you the option of `Authorizing access to your own API endpoints using IAM <http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html>`_. You can use this library to sign requests to API Gateway.
 
 .. code:: python
 
