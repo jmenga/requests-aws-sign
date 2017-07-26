@@ -25,7 +25,7 @@ class AWSV4Sign(requests.auth.AuthBase):
         path = url.path or '/'
         querystring = ''
         if url.query:
-            querystring = '?' + urlencode(parse_qs(url.query), doseq=True)
+            querystring = '?' + urlencode(parse_qs(url.query, keep_blank_values=True), doseq=True)
         safe_url = url.scheme + '://' + url.netloc.split(':')[0] + path + querystring
         request = AWSRequest(method=r.method.upper(), url=safe_url, data=r.body)
         SigV4Auth(self.credentials, self.service, self.region).add_auth(request)
